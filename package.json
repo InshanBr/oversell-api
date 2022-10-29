@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsnd --respawn --transpile-only ./src/index.ts"
+    "dev": "tsnd --respawn --transpile-only ./src/index.ts",
+    "build": "npx tsc",
+    "start": "node dist/src/server.js"
   },
   "author": "",
   "license": "ISC",
