@@ -6,7 +6,6 @@ const app = express()
 const prisma = new PrismaClient()
 app.use(express.json())
 
-// respond with "hello world" when a GET request is made to the homepage
 app.post('/login', async (req, res) => {
   try {
     const checkemail = await prisma.user.findFirst({
