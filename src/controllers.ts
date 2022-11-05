@@ -57,21 +57,26 @@ const login = async (req: Request, res: Response): Promise<any> => {
 }
 
 const isAuth = async (req: Request, res: Response): Promise<any> => {
-  const authHeader = req.get('Authorization')
-  if (!authHeader) {
-    return res.status(401).json({ err: 'not authenticated' })
-  };
-  const token = authHeader.split(' ')[1]
-  let decodedToken
   try {
-    decodedToken = jwt.verify(token, 'secret')
-  } catch (err: any) {
-    return res.status(500).json({ err: err.message || 'could not decode the token' })
-  };
-  if (!decodedToken) {
-    res.status(401).json({ err: 'unauthorized' })
-  } else {
-    res.status(200).json({ message: 'here is your resource' })
+    const authHeader = req.get('Authorization')
+    if (!authHeader) {
+      return res.status(401).json({ err: 'not authenticated' })
+    } else {
+      const token = authHeader.split(' ')[1]
+      let decodedToken
+      try {
+        decodedToken = jwt.verify(token, 'secret')
+      } catch (err: any) {
+        return res.status(500).json({ err: err.message || 'could not decode the token' })
+      }
+      if (!decodedToken) {
+        res.status(401).json({ err: 'unauthorized' })
+      } else {
+        res.status(200).json({ message: 'here is your resource' })
+      }
+    }
+  } catch (err) {
+    res.json({ err: 'error at authentication' })
   }
 }
 
