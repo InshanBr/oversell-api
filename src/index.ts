@@ -1,15 +1,13 @@
 import express from 'express'
-import { signup, login, isAuth } from './controllers'
 import cors from 'cors'
+import { router } from './routes'
 
 const app = express()
+
 app.use(express.json())
 app.use(cors({
   origin: '*'
 }))
+app.use(router)
 
-app.post('/signup', signup)
-app.post('/login', login)
-app.post('/private', isAuth)
-
-app.listen(process.env.PORT ?? 8000)
+app.listen(process.env.PORT ?? 8000, () => console.log('Server is running'))
