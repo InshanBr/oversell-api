@@ -49,6 +49,7 @@ export const SignUp = async (
       token
     })
   } catch (err) {
-    return res.json({ error: 'Failed to create a new user' })
+    console.log(err)
+    return res.status(400).json({ error: 'Failed to create a new user' })
   }
 }
