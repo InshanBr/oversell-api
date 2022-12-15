@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USERNAME: development
+      POSTGRES_PASSWORD: development
+      POSTGRES_DB: oversell
+  app:
+    image: node:19-alpine3.16
+    command: npm run dev
