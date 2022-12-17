@@ -10,8 +10,8 @@ export const SignIn = async (
   try {
     const { email, password } = req.body
 
-    if (!email) return res.json({ error: 'Missing param: email' })
-    if (!password) return res.json({ error: 'Missing param: password' })
+    if (!email) return res.status(400).json({ error: 'Missing param: email' })
+    if (!password) return res.status(400).json({ error: 'Missing param: password' })
 
     const user = await prismaClient.user.findFirst({
       where: {
@@ -19,11 +19,11 @@ export const SignIn = async (
       }
     })
 
-    if (!user) return res.json({ error: 'Email/Password is invalid' })
+    if (!user) return res.status(400).json({ error: 'Email/Password is invalid' })
 
     const passwordIsCorrect = await bcrypt.compare(password, user.password)
 
-    if (!passwordIsCorrect) return res.json({ error: 'Email/Password is invalid' })
+    if (!passwordIsCorrect) return res.status(400).json({ error: 'Email/Password is invalid' })
 
     const token = jwt.sign({ id: user.id }, 'secret', {
       expiresIn: '24h'
@@ -40,7 +40,6 @@ export const SignIn = async (
       token
     })
   } catch (err) {
-    console.log(err)
-    return res.json({ error: 'Failed to login' })
+    return res.status(400).json({ error: 'Failed to login' })
   }
 }
