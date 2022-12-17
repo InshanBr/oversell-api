@@ -21,7 +21,7 @@ export const SignIn = async (
 
     if (!user) return res.json({ error: 'Email/Password is invalid' })
 
-    const passwordIsCorrect = bcrypt.compare(password, user.password)
+    const passwordIsCorrect = await bcrypt.compare(password, user.password)
 
     if (!passwordIsCorrect) return res.json({ error: 'Email/Password is invalid' })
 
@@ -40,6 +40,7 @@ export const SignIn = async (
       token
     })
   } catch (err) {
+    console.log(err)
     return res.json({ error: 'Failed to login' })
   }
 }
