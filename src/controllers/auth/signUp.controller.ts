@@ -10,9 +10,9 @@ export const SignUp = async (
   try {
     const { email, password, username } = req.body
 
-    if (!username) return res.json({ error: 'Missing param: username' })
-    if (!email) return res.json({ error: 'Missing param: email' })
-    if (!password) return res.json({ error: 'Missing param: password' })
+    if (!username) return res.status(400).json({ error: 'Missing param: username' })
+    if (!email) return res.status(400).json({ error: 'Missing param: email' })
+    if (!password) return res.status(400).json({ error: 'Missing param: password' })
 
     const emailAlreadyExists = await prismaClient.user.findFirst({
       where: {
@@ -21,7 +21,7 @@ export const SignUp = async (
     })
 
     if (emailAlreadyExists) {
-      return res.json({ error: 'Email already exists' })
+      return res.status(400).json({ error: 'Email already exists' })
     }
 
     const passwordHash = await bcrypt.hash(password, 12)
