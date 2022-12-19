@@ -8,6 +8,17 @@ interface DecodedToken {
   exp: number
 }
 
+function exclude<User, Key extends keyof User> (
+  user: User,
+  keys: Key[]
+): Omit<User, Key> {
+  for (const key of keys) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete user[key]
+  }
+  return user
+}
+
 export const isAuth = async (
   req: Request,
   res: Response
@@ -31,11 +42,11 @@ export const isAuth = async (
 
     if (!user) return res.status(400).json({ error: 'User not found' })
 
-    return res.status(200).json({
-      id: user.id,
-      email: user.email,
-      username: user.username
-    })
+    const info = exclude(user, ['password'])
+
+    return res.status(200).json(
+      info
+    )
   } catch (err: any) {
     return res
       .status(500)
