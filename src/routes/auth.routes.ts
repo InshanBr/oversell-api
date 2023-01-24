@@ -7,6 +7,6 @@ const authRouter = Router()
 
 authRouter.post('/signup', SignUp)
 authRouter.post('/login', SignIn)
-authRouter.post('/isAuth', isAuth)
+authRouter.get('/isAuth', isAuth)
 
 export { authRouter }
