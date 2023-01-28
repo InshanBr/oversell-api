@@ -8,11 +8,11 @@ export const SignIn = async (
   res: Response
 ): Promise<Response<any, Record<string, any>> | undefined> => {
   try {
-    const { email, password } = req.body
+    const { email, password, extendTime } = req.body
 
     if (!email) return res.status(400).json({ error: 'Missing param: email' })
     if (!password) return res.status(400).json({ error: 'Missing param: password' })
-
+    if (!(typeof extendTime === 'boolean')) return res.status(400).json({ error: 'Missing param: extendToken' })
     const user = await prismaClient.user.findFirst({
       where: {
         email
@@ -25,10 +25,17 @@ export const SignIn = async (
 
     if (!passwordIsCorrect) return res.status(400).json({ error: 'Email/Password is invalid' })
 
-    const token = jwt.sign({ id: user.id }, 'secret', {
-      expiresIn: '24h'
-    })
+    let token
 
+    if (extendTime) {
+      token = jwt.sign({ id: user.id }, 'secret', {
+        expiresIn: '168h'
+      })
+    } else {
+      token = jwt.sign({ id: user.id }, 'secret', {
+        expiresIn: '24h'
+      })
+    }
     const userWithoutPassword = {
       id: user.id,
       email: user.email,

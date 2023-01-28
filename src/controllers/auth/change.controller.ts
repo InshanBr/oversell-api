@@ -31,7 +31,6 @@ export const Change = async (
     })
 
     if (!user) return res.status(400).json({ error: 'User not found' })
-
     if (!username) return res.status(400).json({ error: 'Missing param: username' })
     if (!email) return res.status(400).json({ error: 'Missing param: email' })
 
