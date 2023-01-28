@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import jwt from 'jsonwebtoken'
 import { prismaClient } from '../../database/client'
+import jwt from 'jsonwebtoken'
 
 interface DecodedToken {
   id: string
@@ -8,11 +8,12 @@ interface DecodedToken {
   exp: number
 }
 
-export const isAuth = async (
+export const Change = async (
   req: Request,
   res: Response
 ): Promise<Response<any, Record<string, any>> | undefined> => {
   try {
+    const { email, username } = req.body
     const { authorization } = req.headers
 
     if (!authorization) return res.status(400).json({ error: 'Missing token' })
@@ -26,22 +27,31 @@ export const isAuth = async (
     const user = await prismaClient.user.findFirst({
       where: {
         id: decodedToken.id
-      },
-      select: {
-        id: true,
-        email: true,
-        username: true
       }
     })
 
     if (!user) return res.status(400).json({ error: 'User not found' })
 
+    if (!username) return res.status(400).json({ error: 'Missing param: username' })
+    if (!email) return res.status(400).json({ error: 'Missing param: email' })
+
+    const update = await prismaClient.user.update({
+      where: { id: decodedToken.id },
+      data: {
+        email: req.body.email,
+        username: req.body.username
+      },
+      select: {
+        email: true,
+        username: true
+      }
+    })
+
     return res.status(200).json(
-      user
+      update
     )
   } catch (err: any) {
-    return res
-      .status(500)
-      .json({ error: err.message || 'could not decode the token' })
+    console.log(err)
+    return res.status(400).json({ error: 'Failed to change info of the user' })
   }
 }
