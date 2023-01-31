@@ -12,7 +12,7 @@ export const SignIn = async (
 
     if (!email) return res.status(400).json({ error: 'Missing param: email' })
     if (!password) return res.status(400).json({ error: 'Missing param: password' })
-    if (!(typeof extendTime === 'boolean')) return res.status(400).json({ error: 'Missing param: extendToken' })
+    if (!(typeof extendTime === 'boolean')) return res.status(400).json({ error: 'Missing param: extendTime' })
     const user = await prismaClient.user.findFirst({
       where: {
         email
